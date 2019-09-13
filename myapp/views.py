@@ -1,9 +1,25 @@
 import datetime
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from .models import DreamReal
+
+
+def data_manipulation(request):
+    res = ""
+
+    # Filtering data:
+    qs = DreamReal.objects.filter(name="paul")
+    res += f"Found : {len(qs)} results <br>"
+
+    # Ordering results
+    qs = DreamReal.objects.order_by("name")
+
+    for elt in qs:
+        res += elt.name + "<br>"
+
+    return HttpResponse(res)
 
 
 def crud_ops(request):
@@ -50,21 +66,20 @@ def crud_ops(request):
     return HttpResponse(res)
 
 
-def hello(request):
-    today = datetime.datetime.now().date()
-
-    days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    return render(request, "hello.html", {'today': today,
-                                          "days_of_week": days_of_week})
-
-
 def morning(request):
     return render(request, "morning.html", {})
 
 
+def hello(request):
+    today = datetime.datetime.now().date()
+
+    days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    return redirect("https://www.djangoproject.com")
+
+
 def view_article(request, id):
     text = f"Displaying article number: {id}"
-    return HttpResponse(text)
+    return redirect(view_articles, month="02", year="2045")
 
 
 def view_articles(request, month, year):
