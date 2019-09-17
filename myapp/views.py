@@ -2,8 +2,54 @@ import datetime
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from django.views.generic import TemplateView, ListView
 
 from .models import DreamReal
+from .forms import LoginForm
+
+
+def login(request):
+    username = "not logged in"
+
+    if request.method == "POST":
+        # Get the posted form
+        MyLoginForm = LoginForm(request.POST)
+
+        if MyLoginForm.is_valid():
+            username = MyLoginForm.cleaned_data['username']
+    else:
+        MyLoginForm = LoginForm()
+
+    return render(request, "logged_in.html", {"username": username})
+
+
+class DreamView(ListView):
+    queryset = DreamReal.objects.all()
+    template_name = "dreamreal.html"
+
+
+class StaticView(TemplateView):
+    template_name = "static.html"
+
+
+def send_mass_email(request):
+    send_mail("Test_New_Message",
+              "WOW MAN. This is automated message.",
+              "***",  # insert your email
+              ["poje@dr-mail.net",  # https://temp-mail.org/en/  # generate fake email
+               "***"],  # insert another email
+              fail_silently=False)
+    return render(request, "email.html")
+
+
+def send_email(request):
+    send_mail("What's up, man!",
+              "Hello there. This is automated message.",
+              "***",  # insert your email
+              ["poje@dr-mail.net"],  # https://temp-mail.org/en/  # generate fake email
+              fail_silently=False)
+    return render(request, "email.html")
 
 
 def data_manipulation(request):

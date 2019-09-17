@@ -1,0 +1,9 @@
+{% extends "main_template.html" %}
+{% block content %}
+DreamReals:
+<p>
+    {% for dr in object_list %}
+    <br>{{ dr.name }}<br>
+    {% endfor %}
+</p>
+{% endblock %}
